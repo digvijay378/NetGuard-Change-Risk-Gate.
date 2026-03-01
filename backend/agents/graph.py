@@ -37,13 +37,14 @@ def node_ingestion(state: AgentState) -> AgentState:
     raw = state.get("raw_diff", "")
     source = state.get("change_source", "unknown")
     detected = detect_stack(raw, source)
-    parsed = parse_change(raw, detected)
+    normalized_changes, legacy_dict = parse_to_ir(raw, detected)
     ms = int((time.monotonic() - t0) * 1000)
     trace = list(state.get("agent_trace", []))
     trace.append(_step("Node 1: Ingestion", "completed",
                         f"source={source}, diff_length={len(raw)}",
-                        f"stack={detected}, resources={len(parsed.get('resources', []))}", ms))
-    return {**state, "detected_stack": detected, "parsed_change": parsed, "agent_trace": trace}
+                        f"stack={detected}, ir_changes={len(normalized_changes)}, resources={len(legacy_dict.get('resources', []))}", ms))
+    return {**state, "detected_stack": detected, "parsed_change": legacy_dict,
+            "normalized_changes": normalized_changes, "agent_trace": trace}
 
 
 # ─── Node 2: Rule Engine Agent ────────────────────────────────────────────────
