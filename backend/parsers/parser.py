@@ -338,16 +338,19 @@ class AWSParser:
         changes = []
         for m in re.finditer(r'\{([^{}]+)\}', stmts):
             stmt = m.group(1)
-            action_m = re.search(r'"Action"\s*:\s*"([^"]+)"', stmt)
-            if action_m and action_m.group(1) == "*":
-                changes.append(NormalizedChange(
-                    change_type="ADD", resource_type="iam_policy",
-                    resource_name="inline_iam_policy", vendor=vendor,
-                    direction="UNKNOWN", source_cidrs=[], dest_cidrs=[],
-                    ports=[], protocol="ANY", action="ALLOW",
-                    iam_actions=["*"], iam_resources=["*"],
-                    raw_snippet=stmt[:200], line_start=line_num,
-                ))
+            # Match both JSON format ("Action": "*") and HCL format (Action = "*" or Action = ["*"])
+            action_m = re.search(r'(?:"Action"|Action)\s*[=:]\s*(?:"([^"]+)"|\[\s*"([^"]+)"\s*\])', stmt, re.IGNORECASE)
+            if action_m:
+                action_val = action_m.group(1) or action_m.group(2)
+                if action_val == "*":
+                    changes.append(NormalizedChange(
+                        change_type="ADD", resource_type="iam_policy",
+                        resource_name="inline_iam_policy", vendor=vendor,
+                        direction="UNKNOWN", source_cidrs=[], dest_cidrs=[],
+                        ports=[], protocol="ANY", action="ALLOW",
+                        iam_actions=["*"], iam_resources=["*"],
+                        raw_snippet=stmt[:200], line_start=line_num,
+                    ))
         return changes
 
     def _fallback_parse(self, diff: str, vendor: str) -> List[NormalizedChange]:
