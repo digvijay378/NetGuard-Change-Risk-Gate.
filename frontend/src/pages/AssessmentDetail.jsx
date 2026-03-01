@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import RiskBadge from "@/components/netguard/RiskBadge";
 import PipelineViz from "@/components/netguard/PipelineViz";
-import { ArrowLeft, CheckCircle, XCircle, Shield, AlertTriangle, Clock, ExternalLink } from "lucide-react";
+import { ArrowLeft, CheckCircle, XCircle, Shield, AlertTriangle, Clock, ExternalLink, Code, Wrench, MapPin, ChevronDown, ChevronUp } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
