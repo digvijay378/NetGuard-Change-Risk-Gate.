@@ -272,10 +272,12 @@ export default function NewAssessment() {
               Analysis Includes
             </div>
             {[
+              { label: "Multi-Vendor IR", desc: "AWS / Azure / GCP / Cisco / PAN-OS / FortiGate / K8s" },
               { label: "CVE Lookup", desc: "NVD database via RAG" },
               { label: "ATT&CK Mapping", desc: "MITRE technique retrieval" },
               { label: "Policy Check", desc: "CIS/NIST control validation" },
               { label: "History Correlation", desc: "Past incident matching" },
+              { label: "Remediation", desc: "Auto-generated fix code" },
               { label: "AI Analysis", desc: "Claude 3.5 Sonnet [PLACEHOLDER]" },
             ].map(item => (
               <div key={item.label} style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, paddingBottom: 8, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
