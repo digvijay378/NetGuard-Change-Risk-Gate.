@@ -283,6 +283,7 @@ def run_agent_graph(
         "raw_diff": raw_diff,
         "change_metadata": change_metadata,
         "parsed_change": None,
+        "normalized_changes": [],
         "detected_stack": "unknown",
         "rule_findings": [],
         "base_risk_score": 0,
