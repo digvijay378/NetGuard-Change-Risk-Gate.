@@ -1,0 +1,76 @@
+{
+  "summary": "Full-stack testing of NetGuard v2 IR-based pipeline. Fixed IAM wildcard detection bug in parser.py and rule_engine.py. 11/11 backend API tests pass. Frontend tests pass - Dashboard, New Assessment (6 source tabs), Assessment Detail with expandable findings.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Dashboard - Table hydration",
+        "issues": ["Console hydration warning: <span> as child of <tbody> - React dev environment issue, not visible to users"]
+      }
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_netguard_v2.py",
+    "/app/test_reports/pytest/pytest_results_v2.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [],
+  "updated_files": [
+    "/app/backend/engine/rule_engine.py",
+    "/app/backend/parsers/parser.py",
+    "/app/backend/tests/test_netguard_v2.py"
+  ],
+  "success_rate": {
+    "backend": "100% (11/11 tests passed)",
+    "frontend": "100% - all pages load, all flows working"
+  },
+  "seed_data_creation": "Created multiple test assessments during testing (AWS SSH, Cisco IOS ACL, Kubernetes NetworkPolicy, IAM wildcard, Route table)",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "All requested features verified working: POST /api/v1/assess for AWS (CRITICAL), Cisco IOS (CRITICAL, cisco_ios stack), Kubernetes (CRITICAL, kubernetes stack), IAM wildcard (CRITICAL, IAM-001), Low-risk route table (MEDIUM, not CRITICAL). GET /api/v1/stats returns correct structure with by_risk_level and by_source. GET /api/v1/assessments excludes _id. GET /api/v1/assessments/{id} includes rule_findings with code_snippet, suggested_fix, line_number, resource_name. GET /api/v1/health/rag returns 4 collections (cve_knowledge, attack_techniques, policy_controls, change_history). Frontend: Dashboard with stats/charts/pipeline/table, New Assessment with 6 source tabs, Assessment Detail with expandable findings showing code snippet and suggested remediation.",
+  "mocked_integrations": [
+    "Claude 3.5 Sonnet Analysis (Node 4 - placeholder returns mock based on rule findings)",
+    "GitHub PR comment posting",
+    "ServiceNow work note",
+    "Jira comment"
+  ],
+  "bug_fixes_applied": [
+    {
+      "file": "/app/backend/engine/rule_engine.py",
+      "issue": "IAM wildcard detection fallback regex didn't match HCL format 'Action = [\"*\"]'",
+      "fix": "Added multiple regex patterns to match both JSON and HCL formats for IAM wildcard detection"
+    },
+    {
+      "file": "/app/backend/parsers/parser.py",
+      "issue": "AWS parser _parse_iam_block and _parse_iam_statements only matched JSON format ('\"Action\": ...') not HCL ('Action = ...')",
+      "fix": "Updated regex patterns to match both JSON and HCL IAM policy formats"
+    }
+  ],
+  "tests_verified": {
+    "backend": [
+      "RAG health returns healthy status with 4 collections",
+      "Stats returns correct counts for total, by_risk_level, by_source",
+      "Assessments list excludes MongoDB _id",
+      "AWS SSH 0.0.0.0/0 → CRITICAL, ESCALATE_TO_HUMAN",
+      "Cisco IOS ACL SSH/RDP from any → CRITICAL, cisco_ios stack",
+      "Kubernetes NetworkPolicy 0.0.0.0/0 → CRITICAL, kubernetes stack",
+      "IAM wildcard Action=* → CRITICAL, IAM-001 finding",
+      "Low-risk route table → MEDIUM (not CRITICAL)",
+      "Assessment detail has rule_findings with code_snippet, suggested_fix, line_number, resource_name",
+      "Agent trace has 6 nodes",
+      "RAG enrichment includes CVE, ATT&CK, policy controls"
+    ],
+    "frontend": [
+      "Dashboard loads with stats, charts, pipeline viz, recent assessments table",
+      "New Assessment page shows 6 source tabs (GitHub PR, Firewall Rule, Network Device, Kubernetes, ServiceNow, Jira)",
+      "New Assessment submits and navigates to assessment detail page",
+      "Assessment Detail shows risk gauge, pipeline trace, rule findings section",
+      "Finding cards are expandable with code snippet and suggested remediation"
+    ]
+  }
+}
