@@ -138,7 +138,7 @@ export default function NewAssessment() {
       try { metaObj = JSON.parse(meta); } catch (_) {}
 
       const res = await axios.post(`${API}/v1/assess`, {
-        change_source: source,
+        change_source: source === "network_device" || source === "kubernetes" ? "github_pr" : source,
         raw_diff: diff,
         change_metadata: metaObj,
       });
