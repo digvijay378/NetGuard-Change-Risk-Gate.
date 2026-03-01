@@ -2,13 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import PipelineViz from "@/components/netguard/PipelineViz";
-import { GitPullRequest, Shield, Ticket, LayoutList } from "lucide-react";
+import { GitPullRequest, Shield, Ticket, LayoutList, Router, Server } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const SOURCES = [
   { id: "github_pr", label: "GitHub PR", icon: GitPullRequest },
   { id: "firewall_api", label: "Firewall Rule", icon: Shield },
+  { id: "network_device", label: "Network Device", icon: Router },
+  { id: "kubernetes", label: "Kubernetes", icon: Server },
   { id: "servicenow", label: "ServiceNow", icon: Ticket },
   { id: "jira", label: "Jira", icon: LayoutList },
 ];
