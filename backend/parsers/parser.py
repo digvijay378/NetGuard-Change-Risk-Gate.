@@ -310,8 +310,9 @@ class AWSParser:
 
     def _parse_iam_block(self, full_name: str, block: str,
                           line_num: int, vendor: str) -> Optional[NormalizedChange]:
-        actions = re.findall(r'"Action"\s*:\s*(?:"([^"]+)"|\[([^\]]+)\])', block)
-        resources = re.findall(r'"Resource"\s*:\s*(?:"([^"]+)"|\[([^\]]+)\])', block)
+        # Match both JSON format ("Action": ...) and HCL format (Action = ...)
+        actions = re.findall(r'(?:"Action"|Action)\s*[=:]\s*(?:"([^"]+)"|\[([^\]]+)\])', block, re.IGNORECASE)
+        resources = re.findall(r'(?:"Resource"|Resource)\s*[=:]\s*(?:"([^"]+)"|\[([^\]]+)\])', block, re.IGNORECASE)
 
         action_list = []
         for a, al in actions:
