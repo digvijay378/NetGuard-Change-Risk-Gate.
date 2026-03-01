@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 from typing import List
 
 from agents.state import AgentState, AgentStep, FindingItem
-from parsers.parser import detect_stack, parse_change
+from parsers.parser import detect_stack, parse_to_ir
 from engine.rule_engine import evaluate_rules, calculate_blast_radius
 from rag.chroma_db import (
     query_cves, query_attack_techniques, query_policy_controls,
