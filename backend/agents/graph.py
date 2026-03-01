@@ -71,13 +71,18 @@ def node_rag_retrieval(state: AgentState) -> AgentState:
     t0 = time.monotonic()
     findings: List[FindingItem] = state.get("rule_findings", [])
     parsed = state.get("parsed_change", {})
+    normalized_changes = state.get("normalized_changes", [])
     stack = state.get("detected_stack", "")
 
-    # Build rich query from findings and parsed change
+    # Build rich query from findings, IR, and parsed change
     finding_text = " ".join([f['title'] for f in findings]) if findings else "network change"
     tags_text = " ".join([t for f in findings for t in f.get('tags', [])])
-    ports_text = " ".join(parsed.get("ports_modified", []))
-    query = f"{finding_text} {tags_text} {stack} port {ports_text} security vulnerability"
+    # Extract ports from IR
+    ir_ports = " ".join({str(p) for c in normalized_changes for p in c.ports if not p.is_any()})
+    ports_text = ir_ports or " ".join(parsed.get("ports_modified", []))
+    # Include resource types from IR
+    resource_types = " ".join({c.resource_type for c in normalized_changes})
+    query = f"{finding_text} {tags_text} {stack} {resource_types} port {ports_text} security vulnerability"
 
     cves = query_cves(query, top_k=5)
     attacks = query_attack_techniques(query, top_k=5)
