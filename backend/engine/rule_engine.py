@@ -600,7 +600,16 @@ def _fallback_raw_rules(raw_diff: str) -> List[dict]:
             40, True, ["port_exposure", "ssh", "fallback_detection"],
         ))
 
-    if re.search(r'"Action"\s*:\s*"\*"|\bactions\s*=\s*\["\*"\]', raw_diff):
+    # Detect wildcard IAM actions in various formats:
+    # - JSON: "Action": "*" or "Action": ["*"]
+    # - HCL: Action = "*" or Action = ["*"] or actions = ["*"]
+    iam_wildcard_patterns = [
+        r'"Action"\s*:\s*"\*"',           # JSON: "Action": "*"
+        r'"Action"\s*:\s*\["\*"\]',       # JSON: "Action": ["*"]
+        r'\bAction\s*=\s*\[?\s*"\*"\s*\]?',  # HCL: Action = "*" or Action = ["*"]
+        r'\bactions\s*=\s*\["\*"\]',      # HCL lowercase: actions = ["*"]
+    ]
+    if any(re.search(p, raw_diff, re.IGNORECASE) for p in iam_wildcard_patterns):
         findings.append(make_finding(
             "IAM-001", "Wildcard IAM Action — Raw Detection", "CRITICAL",
             "Wildcard Action=[*] detected in diff (raw fallback detection).",
