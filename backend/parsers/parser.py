@@ -180,9 +180,9 @@ class AWSParser:
             if change:
                 changes.append(change)
 
-        # IAM inline policies
+        # IAM inline policies - match both JSON ("Statement": [...]) and HCL (Statement = [...])
         for m in re.finditer(
-            r'"Statement"\s*:\s*\[(.*?)\]', diff, re.DOTALL
+            r'(?:"Statement"|Statement)\s*[=:]\s*\[(.*?)\]', diff, re.DOTALL | re.IGNORECASE
         ):
             stmts = m.group(1)
             changes.extend(self._parse_iam_statements(stmts, diff[:m.start()].count("\n"), vendor))
