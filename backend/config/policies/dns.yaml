@@ -1,0 +1,50 @@
+rules:
+  - id: DNS-001
+    name: "DNS Zone Modification"
+    description: "DNS zone changes can enable man-in-the-middle attacks and credential harvesting via hijacking."
+    severity: HIGH
+    score: 30
+    block_merge: false
+    tags: [dns, hijacking, collection]
+    patterns:
+      resource_keywords: ["aws_route53_zone", "azurerm_dns_zone", "google_dns_managed_zone", "dns_zone"]
+
+  - id: DNS-002
+    name: "DNS Record Modification"
+    description: "Changes to A, CNAME, or MX records can redirect traffic to attacker infrastructure."
+    severity: MEDIUM
+    score: 15
+    block_merge: false
+    tags: [dns, redirect]
+    patterns:
+      resource_keywords: ["aws_route53_record", "azurerm_dns_a_record", "azurerm_dns_cname_record", "google_dns_record_set"]
+
+  - id: DNS-003
+    name: "DNS Resolver / Forwarder Change"
+    description: "Modifications to DNS forwarders can enable DNS hijacking at infrastructure level."
+    severity: HIGH
+    score: 25
+    block_merge: false
+    tags: [dns, resolver, hijacking]
+    patterns:
+      resource_keywords: ["dns_resolver", "dns_forwarder", "forward_zone", "resolv.conf"]
+
+  - id: SEC-001
+    name: "TLS/SSL Certificate Modification"
+    description: "Certificate changes can enable MitM via invalid or attacker-controlled certificates."
+    severity: MEDIUM
+    score: 15
+    block_merge: false
+    tags: [tls, certificate, mitm]
+    patterns:
+      resource_keywords: ["aws_acm_certificate", "azurerm_app_service_certificate", "google_compute_ssl_certificate", "tls_certificate"]
+
+  - id: SEC-002
+    name: "Logging / Monitoring Disabled"
+    description: "Disabling logging or monitoring removes audit capability and violates NIST CA-7."
+    severity: HIGH
+    score: 30
+    block_merge: false
+    tags: [logging, monitoring, defense_evasion]
+    patterns:
+      keyword_patterns: ["enable_log = false", "logging = false", "monitoring_enabled = false", "cloudwatch_logs_enabled = false"]

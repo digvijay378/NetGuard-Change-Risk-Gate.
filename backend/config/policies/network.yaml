@@ -1,0 +1,73 @@
+rules:
+  - id: NET-001
+    name: "Unrestricted Internet Ingress (SSH/RDP)"
+    description: "SSH or RDP port open to 0.0.0.0/0 from the public internet. Creates direct brute-force and exploit attack surface."
+    severity: CRITICAL
+    score: 40
+    block_merge: true
+    tags: [port_exposure, ssh, rdp, initial_access]
+    patterns:
+      cidr_keywords: ["0.0.0.0/0", "::/0"]
+      port_keywords: ["22", "3389", "ssh", "rdp"]
+
+  - id: NET-002
+    name: "Unrestricted Internet Ingress (All Ports)"
+    description: "All traffic permitted from 0.0.0.0/0. Exposes entire service to public internet."
+    severity: CRITICAL
+    score: 35
+    block_merge: true
+    tags: [port_exposure, initial_access]
+    patterns:
+      cidr_keywords: ["0.0.0.0/0", "::/0"]
+      port_keywords: ["*", "-1", "all", "0-65535", "0 - 65535", "all traffic"]
+
+  - id: NET-003
+    name: "Unrestricted Egress Rule"
+    description: "Unrestricted outbound traffic enables data exfiltration over any protocol."
+    severity: MEDIUM
+    score: 20
+    block_merge: false
+    tags: [exfiltration, egress]
+    patterns:
+      cidr_keywords: ["0.0.0.0/0"]
+      direction_keywords: ["egress", "outbound", "out", "destination"]
+
+  - id: NET-004
+    name: "NAT Gateway Modification"
+    description: "Changes to NAT gateway can create covert exfiltration channels."
+    severity: HIGH
+    score: 25
+    block_merge: false
+    tags: [nat, routing, command_and_control]
+    patterns:
+      resource_keywords: ["aws_nat_gateway", "nat_gateway", "google_compute_router_nat"]
+
+  - id: NET-005
+    name: "Route Table Modification"
+    description: "Route table changes can redirect traffic to attacker-controlled hosts."
+    severity: MEDIUM
+    score: 15
+    block_merge: false
+    tags: [routing, lateral_movement]
+    patterns:
+      resource_keywords: ["aws_route", "route_table", "azurerm_route_table", "google_compute_route"]
+
+  - id: NET-006
+    name: "Security Group Modification"
+    description: "Security group rules are the primary network perimeter control."
+    severity: MEDIUM
+    score: 15
+    block_merge: false
+    tags: [security_group, network_perimeter]
+    patterns:
+      resource_keywords: ["aws_security_group", "azurerm_network_security_group", "google_compute_firewall"]
+
+  - id: NET-007
+    name: "VPN / Tunnel Configuration Change"
+    description: "VPN and tunnel changes can expose internal networks."
+    severity: HIGH
+    score: 25
+    block_merge: false
+    tags: [vpn, tunnel, network_boundary]
+    patterns:
+      resource_keywords: ["vpn_gateway", "vpn_connection", "tunnel", "ipsec"]

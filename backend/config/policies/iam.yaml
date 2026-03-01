@@ -1,0 +1,50 @@
+rules:
+  - id: IAM-001
+    name: "Wildcard IAM Action"
+    description: "IAM policy grants '*' action — full administrative access. Any compromised identity becomes full admin."
+    severity: CRITICAL
+    score: 45
+    block_merge: true
+    tags: [iam, privilege_escalation, defense_evasion]
+    patterns:
+      action_keywords: ["\"*\"", "'*'", "Action: \"*\"", "actions = [\"*\"]"]
+
+  - id: IAM-002
+    name: "Admin/Owner Role Assignment"
+    description: "Owner, Contributor, or Administrator role assigned. Cloud admin access can disable logging and delete audit trails."
+    severity: CRITICAL
+    score: 40
+    block_merge: true
+    tags: [iam, rbac, privilege_escalation]
+    patterns:
+      role_keywords: ["Owner", "Contributor", "Administrator", "AdministratorAccess", "PowerUser", "FullAccess"]
+
+  - id: IAM-003
+    name: "New Role Binding / Policy Attachment"
+    description: "New IAM role assignment or policy attachment may expand blast radius."
+    severity: HIGH
+    score: 25
+    block_merge: false
+    tags: [iam, rbac]
+    patterns:
+      resource_keywords: ["azurerm_role_assignment", "aws_iam_role_policy", "google_project_iam_binding", "iam_member"]
+
+  - id: IAM-004
+    name: "Service Account Key Creation"
+    description: "New service account keys are long-lived credentials that persist beyond session."
+    severity: HIGH
+    score: 20
+    block_merge: false
+    tags: [iam, credentials, persistence]
+    patterns:
+      resource_keywords: ["google_service_account_key", "aws_iam_access_key", "azurerm_service_principal"]
+
+  - id: IAM-005
+    name: "Wildcard Resource in IAM Policy"
+    description: "IAM policy targets all resources ('*') rather than specific ARNs."
+    severity: HIGH
+    score: 20
+    block_merge: false
+    tags: [iam, over_permissive]
+    patterns:
+      resource_keywords: ["Resource: \"*\"", "resources = [\"*\"]", "\"Resource\": \"*\""]
