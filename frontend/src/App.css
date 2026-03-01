@@ -1,34 +1,290 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* NetGuard Dark Theme — Sentinel Interface */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-app: #09090b;
+  --bg-card: #121214;
+  --bg-card-hover: #18181b;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-active: rgba(14, 165, 233, 0.5);
+  --text-primary: #fafafa;
+  --text-muted: #71717a;
+  --accent-cyan: #0ea5e9;
+  --risk-low: #10b981;
+  --risk-medium: #0ea5e9;
+  --risk-high: #f59e0b;
+  --risk-critical: #ef4444;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+* { box-sizing: border-box; }
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+/* ── Monospace data elements ── */
+.font-mono, code, pre, .data-value {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
 }
 
-.App-link {
-    color: #61dafb;
+/* ── Scanline animation for cards ── */
+@keyframes scanline {
+  0% { transform: translateY(-100%); opacity: 0; }
+  50% { opacity: 0.08; }
+  100% { transform: translateY(100%); opacity: 0; }
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(14, 165, 233, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(14, 165, 233, 0.6); }
+}
+
+@keyframes critical-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(239, 68, 68, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in { animation: fadeInUp 0.3s ease-out forwards; }
+.animate-slide-in { animation: slideInLeft 0.25s ease-out forwards; }
+.animate-count { animation: countUp 0.4s ease-out forwards; }
+
+/* ── Card scan effect ── */
+.ng-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.15s ease-out;
+}
+
+.ng-card:hover {
+  border-color: rgba(14, 165, 233, 0.25);
+}
+
+.ng-card::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.4), transparent);
+  animation: scanline 3s linear infinite;
+  pointer-events: none;
+}
+
+/* ── Status indicators ── */
+.status-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.status-dot.live { background: var(--risk-low); box-shadow: 0 0 6px var(--risk-low); }
+.status-dot.warning { background: var(--risk-high); box-shadow: 0 0 6px var(--risk-high); }
+.status-dot.critical { background: var(--risk-critical); box-shadow: 0 0 6px var(--risk-critical); }
+
+/* ── Risk badges ── */
+.risk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.risk-badge.LOW { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+.risk-badge.MEDIUM { background: rgba(14,165,233,0.15); color: #0ea5e9; border: 1px solid rgba(14,165,233,0.3); }
+.risk-badge.HIGH { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+.risk-badge.CRITICAL { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.4); animation: critical-glow 1.5s ease-in-out infinite; }
+
+/* ── Sidebar ── */
+.ng-sidebar {
+  width: 220px;
+  min-height: 100vh;
+  background: #0d0d0f;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  z-index: 40;
+}
+
+.ng-main {
+  margin-left: 220px;
+  min-height: 100vh;
+  background: var(--bg-app);
+}
+
+/* ── Pipeline nodes ── */
+.pipeline-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.pipeline-node-circle {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--bg-card);
+  transition: all 0.2s ease-out;
+}
+.pipeline-node-circle.completed {
+  border-color: var(--risk-low);
+  background: rgba(16,185,129,0.1);
+  color: var(--risk-low);
+  box-shadow: 0 0 10px rgba(16,185,129,0.3);
+}
+.pipeline-node-circle.running {
+  border-color: var(--accent-cyan);
+  background: rgba(14,165,233,0.1);
+  color: var(--accent-cyan);
+  animation: glow-pulse 1s ease-in-out infinite;
+}
+.pipeline-node-circle.failed {
+  border-color: var(--risk-critical);
+  background: rgba(239,68,68,0.1);
+  color: var(--risk-critical);
+}
+.pipeline-node-circle.pending {
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+.pipeline-connector {
+  height: 2px;
+  flex: 1;
+  background: var(--border);
+  margin-top: 17px;
+  transition: background 0.3s;
+}
+.pipeline-connector.active { background: rgba(14,165,233,0.5); }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* ── Tables ── */
+.ng-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ng-table th {
+  text-align: left; padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ng-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: top;
+}
+.ng-table tr:hover td { background: var(--bg-card-hover); }
+
+/* ── Textarea / input dark ── */
+.ng-input {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  padding: 8px 12px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.ng-input:focus { border-color: var(--accent-cyan); }
+.ng-input::placeholder { color: var(--text-muted); }
+
+/* ── Buttons ── */
+.ng-btn-primary {
+  background: var(--accent-cyan);
+  color: #000;
+  border: none;
+  border-radius: 2px;
+  padding: 8px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 0 15px rgba(14,165,233,0.3);
+}
+.ng-btn-primary:hover { background: #38bdf8; transform: scale(1.02); }
+.ng-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.ng-btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 6px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ng-btn-ghost:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+
+/* ── Risk gauge ── */
+.risk-gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Loading spinner ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.ng-spinner {
+  width: 20px; height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent-cyan);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
 }
