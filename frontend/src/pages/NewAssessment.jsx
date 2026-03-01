@@ -197,6 +197,8 @@ export default function NewAssessment() {
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "#52525b", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.08em" }}>
               {source === "github_pr" ? "Git Diff / Terraform HCL" :
                source === "firewall_api" ? "Firewall Rule Content" :
+               source === "network_device" ? "ACL / Firewall Config (Cisco, PAN-OS, FortiGate)" :
+               source === "kubernetes" ? "Kubernetes YAML (NetworkPolicy, RBAC)" :
                source === "servicenow" ? "Change Request Description" :
                "Jira Issue Description"}
             </div>
