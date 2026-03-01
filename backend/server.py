@@ -156,7 +156,8 @@ async def create_assessment(req: AssessmentRequest):
     created_at = datetime.now(timezone.utc).isoformat()
     doc = _serialize_assessment(state, created_at)
 
-    await db.assessments.insert_one({**doc, "_id": doc["assessment_id"]})
+    await db.assessments.replace_one({"_id": doc["assessment_id"]},
+                                      {**doc, "_id": doc["assessment_id"]}, upsert=True)
 
     assessment_id = doc["assessment_id"]
     log_assessment(assessment_id, doc["final_decision"], doc["risk_level"],
@@ -180,7 +181,8 @@ async def assess_firewall_rules(req: FirewallRuleRequest):
         state = run_agent_graph("firewall_api", diff, meta)
         created_at = datetime.now(timezone.utc).isoformat()
         doc = _serialize_assessment(state, created_at)
-        await db.assessments.insert_one({**doc, "_id": doc["assessment_id"]})
+        await db.assessments.replace_one({"_id": doc["assessment_id"]},
+                                      {**doc, "_id": doc["assessment_id"]}, upsert=True)
         results.append(AssessmentResponse(**doc))
     return results
 
@@ -213,7 +215,8 @@ async def servicenow_webhook(payload: ServiceNowWebhook):
     state = run_agent_graph("servicenow", payload.description, meta)
     created_at = datetime.now(timezone.utc).isoformat()
     doc = _serialize_assessment(state, created_at)
-    await db.assessments.insert_one({**doc, "_id": doc["assessment_id"]})
+    await db.assessments.replace_one({"_id": doc["assessment_id"]},
+                                      {**doc, "_id": doc["assessment_id"]}, upsert=True)
     return {"status": "assessed", "assessment_id": doc["assessment_id"],
             "risk_level": doc["risk_level"], "decision": doc["final_decision"],
             "placeholder_note": "In production, this Work Note would be posted back to ServiceNow ticket"}
@@ -233,7 +236,8 @@ async def jira_webhook(payload: JiraWebhook):
     state = run_agent_graph("jira", payload.description, meta)
     created_at = datetime.now(timezone.utc).isoformat()
     doc = _serialize_assessment(state, created_at)
-    await db.assessments.insert_one({**doc, "_id": doc["assessment_id"]})
+    await db.assessments.replace_one({"_id": doc["assessment_id"]},
+                                      {**doc, "_id": doc["assessment_id"]}, upsert=True)
     return {"status": "assessed", "assessment_id": doc["assessment_id"],
             "risk_level": doc["risk_level"], "decision": doc["final_decision"],
             "placeholder_note": "In production, markdown comment with ATT&CK mapping would be posted to Jira"}
