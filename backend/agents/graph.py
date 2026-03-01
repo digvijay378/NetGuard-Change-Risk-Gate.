@@ -52,13 +52,14 @@ def node_ingestion(state: AgentState) -> AgentState:
 def node_rule_engine(state: AgentState) -> AgentState:
     t0 = time.monotonic()
     raw = state.get("raw_diff", "")
+    normalized_changes = state.get("normalized_changes", [])
     parsed = state.get("parsed_change", {})
-    findings, base_score = evaluate_rules(raw, parsed)
+    findings, base_score = evaluate_rules(raw, normalized_changes)
     blast = calculate_blast_radius(parsed, findings)
     ms = int((time.monotonic() - t0) * 1000)
     trace = list(state.get("agent_trace", []))
     trace.append(_step("Node 2: Rule Engine", "completed",
-                        f"parsed_change={list(parsed.keys())}",
+                        f"ir_changes={len(normalized_changes)}, rules_evaluated={22}",
                         f"findings={len(findings)}, base_score={base_score}", ms))
     return {**state, "rule_findings": findings, "base_risk_score": base_score,
             "blast_radius": blast, "agent_trace": trace}
