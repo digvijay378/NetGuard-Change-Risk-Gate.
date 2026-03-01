@@ -129,43 +129,9 @@ export default function AssessmentDetail() {
       {/* Rule Findings */}
       {data.rule_findings?.length > 0 && (
         <Section title={`Rule Findings (${data.rule_findings.length})`} testId="rule-findings-section">
-          <table className="ng-table">
-            <thead>
-              <tr>
-                <th>Rule ID</th>
-                <th>Finding</th>
-                <th>Severity</th>
-                <th>Score</th>
-                <th>Tags</th>
-                <th>Block</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.rule_findings.map((f) => (
-                <tr key={f.rule_id}>
-                  <td><span style={{ fontFamily: "JetBrains Mono", fontSize: 12, color: "#0ea5e9" }}>{f.rule_id}</span></td>
-                  <td>
-                    <div style={{ fontFamily: "JetBrains Mono", fontSize: 12, color: "#fafafa", marginBottom: 2 }}>{f.title}</div>
-                    <div style={{ fontSize: 11, color: "#52525b", lineHeight: 1.5 }}>{f.description}</div>
-                  </td>
-                  <td><span style={{ fontFamily: "JetBrains Mono", fontSize: 11, fontWeight: 700, color: SEVERITY_COLOR[f.severity] || "#fafafa" }}>{f.severity}</span></td>
-                  <td><span style={{ fontFamily: "JetBrains Mono", fontSize: 13, fontWeight: 700, color: SEVERITY_COLOR[f.severity] }}>+{f.score_contribution}</span></td>
-                  <td>
-                    <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                      {(f.tags || []).slice(0, 3).map(t => (
-                        <span key={t} style={{ fontFamily: "JetBrains Mono", fontSize: 9, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 2, padding: "1px 5px", color: "#71717a" }}>{t}</span>
-                      ))}
-                    </div>
-                  </td>
-                  <td>
-                    {f.block_merge
-                      ? <span style={{ color: "#ef4444", fontFamily: "JetBrains Mono", fontSize: 10 }}>BLOCK</span>
-                      : <span style={{ color: "#52525b", fontFamily: "JetBrains Mono", fontSize: 10 }}>-</span>}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {data.rule_findings.map((f) => (
+            <FindingCard key={`${f.rule_id}-${f.resource_name}`} finding={f} />
+          ))}
         </Section>
       )}
 
