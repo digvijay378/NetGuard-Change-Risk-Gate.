@@ -1,0 +1,167 @@
+{
+  "project_name": "NetGuard Change-Risk Gate v2",
+  "design_identity": {
+    "persona": "E1 - The Anti-AI Designer",
+    "theme_name": "The Sentinel Interface",
+    "core_concept": "Military-grade Situational Awareness. A HUD (Heads Up Display) for security governance.",
+    "emotional_tone": "Precision, Authority, Instant Visibility, High-Tech trust.",
+    "visual_metaphor": "Obsidian Glass & Neon Data Streams"
+  },
+  "typography": {
+    "font_family": {
+      "headings": "JetBrains Mono, monospace",
+      "body": "Inter, sans-serif",
+      "data": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-4xl md:text-5xl font-bold tracking-tight",
+      "h2": "text-3xl font-semibold tracking-tight",
+      "h3": "text-xl font-medium tracking-tight uppercase text-muted-foreground",
+      "body": "text-sm leading-relaxed",
+      "data_large": "text-2xl font-mono font-bold",
+      "data_small": "text-xs font-mono text-muted-foreground"
+    },
+    "rules": [
+      "CRITICAL: Use 'JetBrains Mono' for ALL numeric data, IDs (CVEs, SHA hashes), and status labels.",
+      "CRITICAL: Use 'Inter' ONLY for long-form descriptions and navigation labels.",
+      "Headings should feel like 'System Alerts' - concise and bold."
+    ]
+  },
+  "colors": {
+    "mode": "dark",
+    "background": {
+      "app": "#09090b",
+      "card": "#121214",
+      "card_hover": "#18181b",
+      "overlay": "rgba(9, 9, 11, 0.8)"
+    },
+    "borders": {
+      "default": "rgba(255, 255, 255, 0.1)",
+      "active": "rgba(14, 165, 233, 0.5)",
+      "critical": "rgba(239, 68, 68, 0.5)"
+    },
+    "semantic_risks": {
+      "low": {
+        "color": "#10b981",
+        "label": "Emerald",
+        "usage": "Safe, Auto-Approved"
+      },
+      "medium": {
+        "color": "#0ea5e9",
+        "label": "Cyan",
+        "usage": "Needs Review, Standard"
+      },
+      "high": {
+        "color": "#f59e0b",
+        "label": "Amber",
+        "usage": "Escalated, Warning"
+      },
+      "critical": {
+        "color": "#ef4444",
+        "label": "Crimson",
+        "usage": "Blocked, Danger"
+      }
+    },
+    "accents": {
+      "primary": "#0ea5e9",
+      "glow": "0 0 20px rgba(14, 165, 233, 0.3)"
+    }
+  },
+  "ui_components": {
+    "cards": {
+      "style": "The 'Terminal' Card",
+      "classes": "bg-card border border-border/40 rounded-none md:rounded-sm relative overflow-hidden group",
+      "enhancement": "Add a 1px 'scanning line' animation on hover. Use a subtle 'noise' texture overlay if possible.",
+      "header_style": "border-b border-border/40 p-4 bg-muted/20 flex justify-between items-center"
+    },
+    "buttons": {
+      "primary": {
+        "classes": "bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_15px_rgba(14,165,233,0.4)] rounded-sm px-6 py-2 font-mono text-sm uppercase tracking-wider transition-all hover:scale-[1.02]",
+        "vibe": "The 'Execute' Button"
+      },
+      "secondary": {
+        "classes": "bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border/50 rounded-sm px-4 py-2 font-mono text-sm transition-all",
+        "vibe": "The 'Cancel' Command"
+      },
+      "ghost": {
+        "classes": "hover:bg-accent hover:text-accent-foreground rounded-sm px-3 py-1 text-xs font-mono text-muted-foreground",
+        "vibe": "The 'Details' Link"
+      }
+    },
+    "inputs": {
+      "style": "bg-background border-border/40 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 rounded-sm font-mono text-sm placeholder:text-muted-foreground/50 h-10"
+    },
+    "badges": {
+      "style": "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+      "variants": {
+        "low": "border-transparent bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25",
+        "medium": "border-transparent bg-cyan-500/15 text-cyan-400 hover:bg-cyan-500/25",
+        "high": "border-transparent bg-amber-500/15 text-amber-400 hover:bg-amber-500/25",
+        "critical": "border-transparent bg-red-500/15 text-red-400 hover:bg-red-500/25 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]"
+      }
+    }
+  },
+  "layout_strategy": {
+    "dashboard": {
+      "grid": "Bento Grid Density. Use 'grid-cols-1 md:grid-cols-4 lg:grid-cols-12 gap-4'.",
+      "spacing": "Tight. Information density is key for security tools. Use p-4 or p-6 for containers.",
+      "areas": {
+        "risk_gauge": "col-span-12 md:col-span-4 lg:col-span-3 row-span-2",
+        "pipeline": "col-span-12 md:col-span-8 lg:col-span-9 row-span-1",
+        "recent_audits": "col-span-12 md:col-span-8 lg:col-span-9 row-span-2",
+        "kb_health": "col-span-12 md:col-span-4 lg:col-span-3 row-span-1"
+      }
+    },
+    "report_view": {
+      "style": "Split Screen. Left: Technical Diff/Log. Right: AI Analysis & Chat.",
+      "container": "h-[calc(100vh-4rem)] overflow-hidden"
+    }
+  },
+  "visual_assets": {
+    "login_hero": {
+      "url": "https://images.unsplash.com/photo-1645352768981-acab045b0742?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTB8MHwxfHNlYXJjaHw0fHxjeWJlcnNlY3VyaXR5JTIwYWJzdHJhY3QlMjBkYXRhJTIwc3RyZWFtfGVufDB8fHx8MTc3MjMyNjU5MHww&ixlib=rb-4.1.0&q=85",
+      "alt": "Cybersecurity Abstract Blue Lights",
+      "usage": "Login page background with heavy blur overlay"
+    },
+    "empty_state_audit": {
+      "url": "https://images.unsplash.com/photo-1680992046617-e2e35451bcdb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjh8MHwxfHNlYXJjaHwyfHxzZXJ2ZXIlMjByb29tJTIwYmx1ZSUyMG5lb258ZW58MHx8fHwxNzcyMzI2NTkxfDA&ixlib=rb-4.1.0&q=85",
+      "alt": "Server Room Green Light",
+      "usage": "Empty state for audit logs or 'System All Clear'"
+    },
+    "risk_critical_bg": {
+      "url": "https://images.unsplash.com/photo-1675627453084-505806a00406?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTB8MHwxfHNlYXJjaHwxfHxjeWJlcnNlY3VyaXR5JTIwYWJzdHJhY3QlMjBkYXRhJTIwc3RyZWFtfGVufDB8fHx8MTc3MjMyNjU5MHww&ixlib=rb-4.1.0&q=85",
+      "alt": "Code Monitor",
+      "usage": "Background for Critical Risk Alerts (High opacity overlay)"
+    }
+  },
+  "charts_and_data": {
+    "library": "Recharts",
+    "theme": {
+      "background": "transparent",
+      "grid": "stroke-border/20 stroke-dasharray='3 3'",
+      "tooltip": "bg-card/90 backdrop-blur-md border border-border/50 text-card-foreground shadow-xl rounded-sm",
+      "colors": ["#0ea5e9", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"]
+    },
+    "pipeline_visualization": {
+      "note": "Use a horizontal node graph. Active nodes should pulse. Completed nodes solid. Failed nodes red.",
+      "nodes": ["Ingestion", "Rule Engine", "RAG Retrieval", "Analysis", "Decision", "Output"]
+    }
+  },
+  "universal_guidelines": {
+    "do_not": [
+      "DO NOT use rounded-xl or rounded-2xl. This is a security tool, use rounded-sm or rounded-none for a sharp, precise look.",
+      "DO NOT use soft drop shadows. Use colored 'glow' shadows or hard borders.",
+      "DO NOT use generic 'Lorem Ipsum'. Use realistic security terms (CVE-2024-1234, Firewall Rule #992, CI/CD Pipeline Failure)."
+    ],
+    "must_do": [
+      "MUST use 'data-testid' on all interactive elements.",
+      "MUST use 'JetBrains Mono' for any data that might be copied (IPs, Hashes, IDs).",
+      "MUST implement a 'Live' feeling. Even if data isn't streaming, add subtle pulses to status indicators."
+    ],
+    "animation": {
+      "philosophy": "Mechanical & Precise.",
+      "transitions": "duration-150 ease-out",
+      "effects": "Use 'scanline' reveals for lists. Use 'glitch' effect for Critical Risk headers."
+    }
+  }
+}
