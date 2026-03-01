@@ -270,6 +270,80 @@ export default function AssessmentDetail() {
   );
 }
 
+function FindingCard({ finding: f }) {
+  const [expanded, setExpanded] = useState(false);
+  const color = SEVERITY_COLOR[f.severity] || "#fafafa";
+  const hasSnippet = f.code_snippet && f.code_snippet.trim().length > 0;
+  const hasFix = f.suggested_fix && f.suggested_fix.trim().length > 0;
+
+  return (
+    <div data-testid={`finding-${f.rule_id}`} style={{
+      background: "rgba(255,255,255,0.02)", border: `1px solid ${f.block_merge ? "rgba(239,68,68,0.2)" : "rgba(255,255,255,0.06)"}`,
+      borderRadius: 3, marginBottom: 10, overflow: "hidden",
+    }}>
+      {/* Header row */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", cursor: "pointer" }}
+        onClick={() => setExpanded(!expanded)}>
+        <span style={{ fontFamily: "JetBrains Mono", fontSize: 12, color: "#0ea5e9", fontWeight: 700, minWidth: 70 }}>{f.rule_id}</span>
+        <span style={{ fontFamily: "JetBrains Mono", fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 2,
+          background: `${color}18`, color, border: `1px solid ${color}40` }}>{f.severity}</span>
+        <span style={{ fontFamily: "JetBrains Mono", fontSize: 12, color: "#fafafa", flex: 1 }}>{f.title}</span>
+        <span style={{ fontFamily: "JetBrains Mono", fontSize: 13, fontWeight: 700, color }}>+{f.score_contribution}</span>
+        {f.block_merge && <span style={{ fontFamily: "JetBrains Mono", fontSize: 9, color: "#ef4444", padding: "2px 6px", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 2 }}>BLOCK</span>}
+        {expanded ? <ChevronUp size={14} color="#52525b" /> : <ChevronDown size={14} color="#52525b" />}
+      </div>
+
+      {/* Description */}
+      <div style={{ padding: "0 14px 10px", fontSize: 11, color: "#71717a", lineHeight: 1.6 }}>{f.description}</div>
+
+      {/* Tags + resource + line */}
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", padding: "0 14px 10px", alignItems: "center" }}>
+        {f.resource_name && (
+          <span style={{ fontFamily: "JetBrains Mono", fontSize: 10, color: "#0ea5e9", display: "flex", alignItems: "center", gap: 3 }}>
+            <MapPin size={10} /> {f.resource_name}
+          </span>
+        )}
+        {f.line_number > 0 && (
+          <span style={{ fontFamily: "JetBrains Mono", fontSize: 10, color: "#f59e0b" }}>L{f.line_number}</span>
+        )}
+        {(f.tags || []).map(t => (
+          <span key={t} style={{ fontFamily: "JetBrains Mono", fontSize: 9, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 2, padding: "1px 5px", color: "#52525b" }}>{t}</span>
+        ))}
+      </div>
+
+      {/* Expandable: Code Snippet + Suggested Fix */}
+      {expanded && (hasSnippet || hasFix) && (
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: 14 }}>
+          {hasSnippet && (
+            <div style={{ marginBottom: hasFix ? 12 : 0 }}>
+              <div style={{ fontFamily: "JetBrains Mono", fontSize: 10, color: "#ef4444", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
+                <Code size={10} /> AFFECTED CODE
+              </div>
+              <pre data-testid={`snippet-${f.rule_id}`} style={{
+                fontFamily: "JetBrains Mono", fontSize: 11, color: "#d4d4d8", background: "rgba(239,68,68,0.04)",
+                border: "1px solid rgba(239,68,68,0.15)", borderRadius: 2, padding: "10px 12px",
+                margin: 0, overflowX: "auto", lineHeight: 1.6, whiteSpace: "pre-wrap",
+              }}>{f.code_snippet}</pre>
+            </div>
+          )}
+          {hasFix && (
+            <div>
+              <div style={{ fontFamily: "JetBrains Mono", fontSize: 10, color: "#10b981", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
+                <Wrench size={10} /> SUGGESTED REMEDIATION
+              </div>
+              <pre data-testid={`fix-${f.rule_id}`} style={{
+                fontFamily: "JetBrains Mono", fontSize: 11, color: "#a1a1aa", background: "rgba(16,185,129,0.04)",
+                border: "1px solid rgba(16,185,129,0.15)", borderRadius: 2, padding: "10px 12px",
+                margin: 0, overflowX: "auto", lineHeight: 1.6, whiteSpace: "pre-wrap",
+              }}>{f.suggested_fix}</pre>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function RiskGauge({ score, level }) {
   const LEVEL_COLORS = { LOW: "#10b981", MEDIUM: "#0ea5e9", HIGH: "#f59e0b", CRITICAL: "#ef4444" };
   const color = LEVEL_COLORS[level] || "#52525b";
