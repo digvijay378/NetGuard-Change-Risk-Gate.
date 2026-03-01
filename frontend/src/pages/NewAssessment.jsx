@@ -47,7 +47,38 @@ const SAMPLE_DIFFS = {
   cidr_blocks = ["0.0.0.0/0"]
   security_group_id = aws_security_group.bastion.id
 }`,
-  servicenow: `Change Request: Modify production NSG to allow RDP ingress from Internet source for emergency admin access. 
+  network_device: `ip access-list extended OUTSIDE-IN
+  permit tcp any any eq 22
+  permit tcp any any eq 3389
+  permit tcp any any eq 23
+  deny ip any any
+
+interface GigabitEthernet0/0
+  description WAN uplink
+  ip access-group OUTSIDE-IN in`,
+  kubernetes: `apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-all-ingress
+  namespace: production
+spec:
+  podSelector: {}
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+  policyTypes:
+  - Ingress
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: super-admin
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["*"]`,
+  servicenow: `Change Request: Modify production NSG to allow RDP ingress from Internet source for emergency admin access.
 Resource: azurerm_network_security_group.prod_nsg
 Priority rule: 100, Direction: Inbound, Protocol: TCP, Port: 3389, Source: Internet, Destination: VirtualNetwork, Action: Allow`,
   jira: `[INFRA-4421] Add IAM role for Lambda deployment
@@ -57,7 +88,7 @@ Changes:
 +   policy = jsonencode({
 +     Statement = [{
 +       Action = ["*"]
-+       Effect = "Allow"  
++       Effect = "Allow"
 +       Resource = "*"
 +     }]
 +   })
@@ -67,6 +98,8 @@ Changes:
 const SAMPLE_META = {
   github_pr: { author: "john.doe", pr_url: "https://github.com/acme/infra/pull/442", pr_number: 442, base_branch: "main" },
   firewall_api: { author: "ops-bot", rule_id: "FW-992", ticket: "CHG-1204" },
+  network_device: { author: "netops", device: "core-rtr-01", vendor: "cisco_ios", ticket: "NET-CHG-2210" },
+  kubernetes: { author: "platform-team", cluster: "prod-us-east-1", ticket: "K8S-1042" },
   servicenow: { ticket_id: "CHG0012045", requester: "jane.smith", priority: "2 - High" },
   jira: { issue_key: "INFRA-4421", reporter: "dev-pipeline", sprint: "2026-Q1-Sprint-3" },
 };
