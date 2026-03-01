@@ -61,8 +61,9 @@ class AgentState(TypedDict):
     change_metadata: dict
 
     # Node 1 output — Ingestion
-    parsed_change: Optional[dict]
-    detected_stack: str      # aws | azure | gcp | onprem | unknown
+    parsed_change: Optional[dict]          # Legacy dict for blast radius
+    normalized_changes: list               # List[NormalizedChange] IR objects
+    detected_stack: str      # aws | azure | gcp | cisco_ios | paloalto | fortigate | kubernetes | onprem | unknown
 
     # Node 2 output — Rule Engine
     rule_findings: List[FindingItem]
