@@ -1,0 +1,7 @@
+project: NetGuard Change-Risk Gate
+version: "2.0"
+author: Digvijay P
+description: AI-powered infrastructure change security governance platform
+stack:
+  backend: FastAPI + Python 3.11 + ChromaDB + LangGraph
+  frontend: React 19 + TailwindCSS + Recharts
